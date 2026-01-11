@@ -1,0 +1,14 @@
+course:
+  title: Course
+  create: Create Course
+  lectures: Lectures
+  assignments: Assignments
+  announce: Announcement
+class:
+  title: Class
+  create: Create Class
+lecture:
+  title: Lecture
+  create: Create Lecture
+announce:
+  title: Publish Course Announcement

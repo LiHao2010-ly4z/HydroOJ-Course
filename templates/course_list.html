@@ -1,0 +1,16 @@
+{% import "components/form.html" as form with context %}
+{% extends "layout/basic.html" %}
+{% block content %}
+<h1>课程列表</h1>
+<a href="{{ url('course_create') }}" class="rounded primary button">新建课程</a>
+<ul>
+  {% for c in courses %}
+    <li>
+      <a href="{{ url('course_detail', { id: c._id }) }}">{{ c.name }}</a>
+      {% if c.desc %}
+        <div class="desc">{{ c.desc | safe }}</div>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

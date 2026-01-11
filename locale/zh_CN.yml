@@ -1,0 +1,14 @@
+course:
+  title: 课程
+  create: 新建课程
+  lectures: 讲义
+  assignments: 作业
+  announce: 公告
+class:
+  title: 班级
+  create: 新建班级
+lecture:
+  title: 讲义
+  create: 添加讲义
+announce:
+  title: 发布课程公告

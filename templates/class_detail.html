@@ -1,0 +1,84 @@
+{% import "components/form.html" as form with context %}
+{% extends "layout/basic.html" %}
+{% block content %}
+<h1>{{ cls.name }}</h1>
+<div class="desc">{{ cls.desc | safe }}</div>
+
+<h2>课程</h2>
+<ul>
+  {% for c in courses %}
+    <li><a href="{{ url('course_detail', { id: c._id }) }}">{{ c.name }}</a></li>
+  {% endfor %}
+</ul>
+
+<h2>管理</h2>
+<form method="post" action="{{ url('class_detail', { id: cls._id }) }}">
+  <input type="hidden" name="operation" value="update" />
+  {{ form.form_text({
+    columns:12,
+    label:'班级名称',
+    name:'name',
+    value:cls.name|default('')
+  }) }}
+  {{ form.form_textarea({
+    columns:12,
+    label:'简介',
+    name:'desc',
+    value:cls.desc|default(''),
+    markdown:true,
+    extra_style:'height:200px',
+    extra_textarea_class:'auto-resize'
+  }) }}
+  {{ form.form_text({
+    columns:12,
+    label:'学生UID（逗号分隔）',
+    name:'studentIds',
+    value:cls.studentIds|join(',')|default('')
+  }) }}
+  {{ form.form_text({
+    columns:12,
+    label:'课程ID（逗号分隔）',
+    name:'courseIds',
+    value:cls.courseIds|join(',')|default('')
+  }) }}
+  <div class="row">
+    <div class="columns">
+      <button name="operation" value="update" data-default-submit type="submit"
+        class="rounded primary button">{{ _('Update') }}</button>
+      <button type="button" class="rounded button" onclick="window.history.go(-1)">
+        {{ _('Cancel') }}
+      </button>
+    </div>
+  </div>
+</form>
+
+<h2>发送公告</h2>
+<form method="post" action="{{ url('course_announce', { courseId: cls._id }) }}">
+  {{ form.form_text({
+    columns:12,
+    label:'标题',
+    name:'title',
+    placeholder:_('Announcement title'),
+    value:announce.title|default('')
+  }) }}
+  {{ form.form_textarea({
+    columns:12,
+    label:'内容',
+    name:'content',
+    value:announce.content|default(''),
+    markdown:true,
+    required:true,
+    extra_style:'height:300px',
+    extra_textarea_class:'auto-resize'
+  }) }}
+  <div class="row">
+    <div class="columns">
+      <button name="operation" value="create" data-default-submit type="submit"
+        class="rounded primary button">{{ _('Send') }}</button>
+      <button type="button" class="rounded button" onclick="window.history.go(-1)">
+        {{ _('Cancel') }}
+      </button>
+    </div>
+  </div>
+</form>
+{% endblock %}

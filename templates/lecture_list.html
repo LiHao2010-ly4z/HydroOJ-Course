@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>讲义列表</h1>
+<a href="{{ url('lecture_create', { courseId: courseId }) }}">添加讲义</a>
+<ul>
+  {% for l in lectures %}
+    <li>
+      <a href="{{ url('lecture_detail', { id: l._id }) }}">{{ l.title }}</a>
+      <small>({{ l.type }})</small>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% import "components/form.html" as form with context %}
+{% extends "layout/basic.html" %}
+{% block content %}
+<div class="row">
+  <div class="medium-9 columns">
+    <div class="section">
+      <div class="section__body">
+        <form method="post">
+          {{ form.form_text({
+            columns:12,
+            label:'标题',
+            name:'title',
+            placeholder:_('Lecture title'),
+            value:lecture.title|default(''),
+            autofocus:true,
+            row:false
+          }) }}
+          {{ form.form_select({
+            columns:12,
+            label:'类型',
+            name:'type',
+            options:[['markdown','Markdown'],['pdf','PDF'],['video','Video']],
+            value:lecture.type|default('markdown')
+          }) }}
+          {{ form.form_text({
+            columns:6,
+            label:'章节',
+            name:'chapter',
+            value:lecture.chapter|default(''),
+            row:false
+          }) }}
+          {{ form.form_text({
+            columns:6,
+            label:'排序',
+            name:'order',
+            value:lecture.order|default(0),
+            row:false
+          }) }}
+          {{ form.form_textarea({
+            columns:12,
+            label:'内容（Markdown）',
+            name:'content',
+            value:lecture.content|default(''),
+            markdown:true,
+            extra_style:'height: 300px',
+            extra_textarea_class:'auto-resize'
+          }) }}
+          <div class="row">
+            <div class="columns">
+              <button name="operation" value="{{ 'update' if lecture else 'create' }}" data-default-submit type="submit"
+                class="rounded primary button">
+                {{ _('Update') if lecture else _('Create') }}
+              </button>
+              {% if lecture and handler.user.hasPerm(perm.PERM_EDIT_DOMAIN) %}
+              <button name="operation" value="delete" type="submit" class="rounded button" onclick="return confirm('确认删除讲义吗？')">
+                {{ _('Delete') }}
+              </button>
+              {% endif %}
+              <button type="button" class="rounded button" onclick="window.history.go(-1)">
+                {{ _('Cancel') }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="medium-3 columns">
+    {% include 'components/md_hint.html' %}
+  </div>
+</div>
+{% endblock %}

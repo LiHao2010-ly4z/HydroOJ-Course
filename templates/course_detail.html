@@ -1,0 +1,123 @@
+{% import "components/form.html" as form with context %}
+{% extends "layout/basic.html" %}
+{% block content %}
+<h1>{{ course.name }}</h1>
+{% if course.cover %}
+  <img src="{{ course.cover }}" alt="cover" style="max-width:240px" />
+{% endif %}
+<div class="desc">{{ course.desc | safe }}</div>
+
+<div class="sidebar">
+  <h3>提交记录</h3>
+  <ul>
+    {% if isAdmin or isTeacher %}
+      <li><a href="/record?tid={{ course._id }}">课程提交</a></li>
+    {% endif %}
+    {% if isMember %}
+      <li><a href="/record?tid={{ course._id }}&uidOrName={{ user._id }}">我的提交</a></li>
+    {% endif %}
+  </ul>
+</div>
+
+<h2>讲义</h2>
+<a href="{{ url('lecture_create', { courseId: course._id }) }}">添加讲义</a>
+<ul>
+  {% for l in lectures %}
+    <li>
+      <a href="{{ url('lecture_detail', { id: l._id }) }}">{{ l.title }}</a>
+      <small>({{ l.type }})</small>
+    </li>
+  {% endfor %}
+</ul>
+
+<h2>作业</h2>
+<ul>
+  {% for a in assignments %}
+    <li>题目ID: {{ a.pid }} {% if a.title %}- {{ a.title }}{% endif %}</li>
+  {% endfor %}
+</ul>
+
+<h2>管理</h2>
+<form method="post" action="{{ url('course_detail', { id: course._id }) }}">
+  <input type="hidden" name="operation" value="update" />
+  {{ form.form_text({
+    columns:12,
+    label:'课程名称',
+    name:'name',
+    value:course.name|default('')
+  }) }}
+  {{ form.form_textarea({
+    columns:12,
+    label:'简介',
+    name:'desc',
+    value:course.desc|default(''),
+    markdown:true,
+    extra_style:'height:200px',
+    extra_textarea_class:'auto-resize'
+  }) }}
+  {{ form.form_text({
+    columns:12,
+    label:'封面图',
+    name:'cover',
+    value:course.cover|default('')
+  }) }}
+  {{ form.form_text({
+    columns:12,
+    label:'班级ID（逗号分隔）',
+    name:'classIds',
+    value:course.classIds|join(',')|default('')
+  }) }}
+  {{ form.form_text({
+    columns:12,
+    label:'教师UID（逗号分隔）',
+    name:'teacherIds',
+    value:course.teacherIds|join(',')|default('')
+  }) }}
+  <div class="row">
+    <div class="columns">
+      <button name="operation" value="update" data-default-submit type="submit"
+        class="rounded primary button">{{ _('Update') }}</button>
+      <button type="button" class="rounded button" onclick="window.history.go(-1)">
+        {{ _('Cancel') }}
+      </button>
+    </div>
+  </div>
+</form>
+
+<form method="post" action="{{ url('course_detail', { id: course._id }) }}">
+  <input type="hidden" name="operation" value="delete" />
+  <button type="submit" class="rounded button" onclick="return confirm('确认删除课程吗？')">
+    {{ _('Delete') }}
+  </button>
+</form>
+
+<h2>公告</h2>
+<form method="post" action="{{ url('course_announce', { courseId: course._id }) }}">
+  {{ form.form_text({
+    columns:12,
+    label:'标题',
+    name:'title',
+    placeholder:_('Announcement title'),
+    value:announce.title|default('')
+  }) }}
+  {{ form.form_textarea({
+    columns:12,
+    label:'内容',
+    name:'content',
+    value:announce.content|default(''),
+    markdown:true,
+    required:true,
+    extra_style:'height:300px',
+    extra_textarea_class:'auto-resize'
+  }) }}
+  <div class="row">
+    <div class="columns">
+      <button name="operation" value="create" data-default-submit type="submit"
+        class="rounded primary button">{{ _('Send') }}</button>
+      <button type="button" class="rounded button" onclick="window.history.go(-1)">
+        {{ _('Cancel') }}
+      </button>
+    </div>
+  </div>
+</form>
+{% endblock %}

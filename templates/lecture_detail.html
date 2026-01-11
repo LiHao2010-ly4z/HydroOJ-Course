@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>{{ lecture.title }}</h1>
+<p>类型：{{ lecture.type }}</p>
+{% if lecture.type == 'markdown' %}
+  <article class="markdown">{{ lecture.content | safe }}</article>
+{% elif lecture.type == 'pdf' %}
+  {% if lecture.fileId %}
+    <a href="{{ lecture.fileId }}" target="_blank">预览/下载 PDF</a>
+  {% else %}
+    <p>未上传文件</p>
+  {% endif %}
+{% elif lecture.type == 'video' %}
+  {% if lecture.fileId %}
+    <video src="{{ lecture.fileId }}" controls style="max-width: 640px;"></video>
+  {% else %}
+    <p>未上传视频</p>
+  {% endif %}
+{% endif %}
+
+<form method="post" action="{{ url('progress_mark', { courseId: lecture.courseId }) }}">
+  <input type="hidden" name="lectureId" value="{{ lecture._id }}" />
+  <button type="submit">标记已读</button>
+</form>
+
+<h2>管理</h2>
+<form method="post" action="{{ url('lecture_detail', { id: lecture._id }) }}">
+  <input type="hidden" name="operation" value="update" />
+  <label>标题</label>
+  <input name="title" value="{{ lecture.title }}" />
+  <label>类型</label>
+  <select name="type">
+    <option value="markdown" {% if lecture.type == 'markdown' %}selected{% endif %}>Markdown</option>
+    <option value="pdf" {% if lecture.type == 'pdf' %}selected{% endif %}>PDF</option>
+    <option value="video" {% if lecture.type == 'video' %}selected{% endif %}>Video</option>
+  </select>
+  <label>章节</label>
+  <input name="chapter" value="{{ lecture.chapter }}" />
+  <label>排序</label>
+  <input name="order" type="number" value="{{ lecture.order or 0 }}" />
+  <label>内容（Markdown）</label>
+  <textarea name="content">{{ lecture.content }}</textarea>
+  <button type="submit">保存</button>
+</form>
+
+<form method="post" action="{{ url('lecture_detail', { id: lecture._id }) }}">
+  <input type="hidden" name="operation" value="delete" />
+  <button type="submit" onclick="return confirm('确认删除讲义？')">删除讲义</button>
+</form>
+{% endblock %}

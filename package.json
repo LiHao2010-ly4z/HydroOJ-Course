@@ -1,0 +1,21 @@
+{
+  "name": "hydrooj-course",
+  "version": "0.0.3",
+  "description": "HydroOJ v5 course plugin: courses, lectures, classes, assignments, progress, announcements",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "ED_Builder <im@ed-builder.top>",
+  "scripts": {
+    "build": "npx tsc -p tsconfig.json",
+    "watch": "npx tsc -w -p tsconfig.json"
+  },
+  "license": "AGPLv3-or-later",
+  "dependencies": {
+    "esbuild": "^0.27.2",
+    "nanoid": "^5.0.0"
+  },
+  "devDependencies": {
+    "hydrooj": "^5.0.0-beta.16",
+    "typescript": "^5.6.3"
+  }
+}

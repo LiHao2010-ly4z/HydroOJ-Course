@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>班级列表</h1>
+<a href="{{ url('class_create') }}">新建班级</a>
+<ul>
+  {% for c in classes %}
+    <li><a href="{{ url('class_detail', { id: c._id }) }}">{{ c.name }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

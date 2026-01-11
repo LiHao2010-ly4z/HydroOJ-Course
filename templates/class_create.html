@@ -1,0 +1,50 @@
+{% import "components/form.html" as form with context %}
+{% extends "layout/basic.html" %}
+{% block content %}
+<div class="row">
+  <div class="medium-9 columns">
+    <div class="section">
+      <div class="section__body">
+        <form method="post">
+          {{ form.form_text({
+            columns:12,
+            label:'班级名称',
+            name:'name',
+            placeholder:_('Class name'),
+            value:cls.name|default(''),
+            autofocus:true
+          }) }}
+          {{ form.form_textarea({
+            columns:12,
+            label:'简介',
+            name:'desc',
+            value:cls.desc|default(''),
+            markdown:true,
+            extra_style:'height:200px',
+            extra_textarea_class:'auto-resize'
+          }) }}
+          <div class="row">
+            <div class="columns">
+              <button name="operation" value="{{ 'update' if cls else 'create' }}" data-default-submit type="submit"
+                class="rounded primary button">
+                {{ _('Update') if cls else _('Create') }}
+              </button>
+              {% if cls and handler.user.hasPerm(perm.PERM_EDIT_DOMAIN) %}
+              <button name="operation" value="delete" type="submit" class="rounded button" onclick="return confirm('确认删除班级吗？')">
+                {{ _('Delete') }}
+              </button>
+              {% endif %}
+              <button type="button" class="rounded button" onclick="window.history.go(-1)">
+                {{ _('Cancel') }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="medium-3 columns">
+    {% include 'components/md_hint.html' %}
+  </div>
+</div>
+{% endblock %}
