@@ -1,5 +1,5 @@
-import { Context, PRIV } from 'hydrooj';
-import { CourseListHandler, CourseCreateHandler, CourseDetailHandler } from './handlers/course';
+import { Context } from 'hydrooj';
+import { CourseService } from './handlers/course';
 import { ClassListHandler, ClassCreateHandler, ClassDetailHandler } from './handlers/class';
 import { LectureListHandler, LectureCreateHandler, LectureDetailHandler } from './handlers/lecture';
 import { ProgressMarkHandler } from './handlers/progress_mark';
@@ -7,15 +7,12 @@ import { ProgressStatsHandler } from './handlers/progress_stats';
 import { AnnounceHandler } from './handlers/announce';
 
 export async function apply(ctx: Context) {
+  ctx.plugin(CourseService);
+
   // 注册 docType=course，使 /record?tid=courseId 可用
-  ctx.registerDocType('course');
+  // ctx.registerDocType('course'); // 可能不存在
 
-  // 课程
-  ctx.Route('course_list', '/course', CourseListHandler, PRIV.PRIV_USER_PROFILE);
-  ctx.Route('course_create', '/course/create', CourseCreateHandler, PRIV.PRIV_USER_PROFILE);
-  ctx.Route('course_detail', '/course/:id', CourseDetailHandler, PRIV.PRIV_USER_PROFILE);
-
-  // 讲义
+  // 其他路由暂时保持
   ctx.Route('lecture_list', '/course/:courseId/lecture', LectureListHandler, PRIV.PRIV_USER_PROFILE);
   ctx.Route('lecture_create', '/course/:courseId/lecture/create', LectureCreateHandler, PRIV.PRIV_USER_PROFILE);
   ctx.Route('lecture_detail', '/lecture/:id', LectureDetailHandler, PRIV.PRIV_USER_PROFILE);
